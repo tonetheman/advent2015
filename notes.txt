@@ -1,0 +1,6 @@
+
+puzzle3:
+	237 and 238 are not right?
+	237 is what my program said
+	238 was just me thinking i was off by one
+	I think I have read the damn puzzle wrong in some way?
