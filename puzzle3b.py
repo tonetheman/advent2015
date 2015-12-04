@@ -1,4 +1,6 @@
 
+# part 1 of puzzle 3
+
 data = open("data3.txt","r").read()
 import string
 data = string.strip(data)
