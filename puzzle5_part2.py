@@ -1,7 +1,13 @@
 
+def log(*args):
+	return
+	ts = ""
+	for a in args:
+		ts = ts + str(a) + " "
+	print ts
 
 def check_pair(s):
-	print "check_pair passed string",s
+	log("check_pair passed string",s)
 	res = True
 	pairs = []
 	for i in range(0, len(s)-1):
@@ -9,24 +15,24 @@ def check_pair(s):
 		pairs.append((part,i))
 
 	for p in pairs:
-		print "\tme",p
+		log("\tme",p)
 		for q in pairs:
-			print "\tlooking at",q
+			log("\tlooking at",q)
 			if p==q:
-				print "\tskipping myself"
+				log("\tskipping myself")
 				continue
 
-			print "\tcheck",p,q
+			log("\tcheck",p,q)
 			if p[0]==q[0]:
-				print "\tpossible match"
+				log("\tpossible match")
 				if p[1]+1 == q[1] or p[1]-1 == q[1]:
-					print "\telim for overlap"
+					log( "\telim for overlap")
 					res = False
 				else:
 					return True
 
 	return res
 
-# print check_pair("xyxy")
+print check_pair("xyxy")
 # print check_pair("aabcdefgaa")
 # print check_pair("aaa")
