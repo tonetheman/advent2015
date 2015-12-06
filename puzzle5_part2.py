@@ -1,6 +1,5 @@
 
 def log(*args):
-	return
 	ts = ""
 	for a in args:
 		ts = ts + str(a) + " "
@@ -8,7 +7,7 @@ def log(*args):
 
 def check_pair(s):
 	log("check_pair passed string",s)
-	res = True
+	res = False
 	pairs = []
 	for i in range(0, len(s)-1):
 		part = s[i:i+2]
@@ -33,6 +32,49 @@ def check_pair(s):
 
 	return res
 
-print check_pair("xyxy")
-# print check_pair("aabcdefgaa")
-# print check_pair("aaa")
+def check_repeated_letter(s):
+	log("check_repeated_letter passed string",s)
+	for index in range(len(s)-2):
+		current_letter = s[index]
+		must_match = s[index+2]
+		if current_letter == must_match:
+			log("current_letter matches must_match",current_letter,
+				must_match)
+			return True
+	log("check_repeated_letter is returing false")
+	return False
+
+def check(s):
+	if check_repeated_letter(s):
+		if check_pair(s):
+			return True
+	return False
+
+def test():
+	#res = check("qjhvhtzxzqqjkmpb")
+	# res = check("xxyxx")
+	# res = check("uurcxstgmygtbstg")
+	res = check("ieodomkazucvgmuy")
+	print "nice",res
+	# print check("uurcxstgmygtbstg")
+	# print check("ieodomkazucvgmuy")
+
+
+def doit():
+	data = open("data5.txt","r").readlines()
+
+	import string
+	data = map(string.strip,data)
+
+	count = 0
+	for word in data:
+		if check(word):
+			count = count + 1
+	print count
+
+doit()
+
+
+
+
+
