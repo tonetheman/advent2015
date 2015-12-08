@@ -1,104 +1,111 @@
 
 GRID_SIZE=1000
-grid = []
-for i in range(GRID_SIZE):
-	grid.append(GRID_SIZE*[0])
 
-def turn_off(grid):
-	for i in range(GRID_SIZE):
-		for j in range(GRID_SIZE):
-			grid[i][j] = 0
+class Grid:
+	def __init__(self):
+		self.grid = []
+		for i in range(GRID_SIZE):
+			self.grid.append(GRID_SIZE*[0])
 
-def turn_range(grid,p1,p2,value):
-	x1 = p1[0]
-	y1 = p1[1]
-	x2 = p2[0]+1
-	y2 = p2[1]+1
-	# print "turn_range",x1,y1,x2,y2,value
-	for i in range(x1,x2):
-		for j in range(y1,y2):
-			grid[i][j]=value
-def toggle_range(grid,p1,p2):
-	x1 = p1[0]
-	y1 = p1[1]
-	x2 = p2[0]+1
-	y2 = p2[1]+1
-	for i in range(x1,x2):
-		for j in range(y1,y2):
-			value = grid[i][j]
-			if value==1:
-				grid[i][j]=0
-			else:
-				grid[i][j]=1
+	def clear(self):
+		for i in range(GRID_SIZE):
+			for j in range(GRID_SIZE):
+				self.grid[i][j] = 0
 
-def count_lights(grid):
-	count = 0
-	for i in range(GRID_SIZE):
-		for j in range(GRID_SIZE):
-			if grid[i][j]==1:
-				count = count + 1
-	return count
+	def turn_range(self,p1,p2,value):
+		x1 = p1[0]
+		y1 = p1[1]
+		x2 = p2[0]+1
+		y2 = p2[1]+1
+		# print "turn_range",x1,y1,x2,y2,value
+		for i in range(x1,x2):
+			for j in range(y1,y2):
+				self.grid[i][j]=value
 
-def turn_on(start_pos,end_pos):
-	s = start_pos.split(",")
-	s =map(int,s)
-	e = end_pos.split(",")
-	e =map(int,e)
-	turn_range(grid,(s[0],s[1]),(e[0],e[1]),1)
+	def toggle_range(self,p1,p2):
+		x1 = p1[0]
+		y1 = p1[1]
+		x2 = p2[0]+1
+		y2 = p2[1]+1
+		for i in range(x1,x2):
+			for j in range(y1,y2):
+				value = self.grid[i][j]
+				if value==1:
+					self.grid[i][j]=0
+				else:
+					self.grid[i][j]=1
 
-def turn_off(start_pos,end_pos):
-	s = start_pos.split(",")
-	s =map(int,s)
-	e = end_pos.split(",")
-	e =map(int,e)
-	turn_range(grid,(s[0],s[1]),(e[0],e[1]),0)
+	def count_lights(self):
+		count = 0
+		for i in range(GRID_SIZE):
+			for j in range(GRID_SIZE):
+				if self.grid[i][j]==1:
+					count = count + 1
+		return count
 
-def toggle(start_pos,end_pos):
-	s = start_pos.split(",")
-	s =map(int,s)
-	e = end_pos.split(",")
-	e =map(int,e)
-	toggle_range(grid,(s[0],s[1]),(e[0],e[1]))
+	def turn_on(self,start_pos,end_pos):
+		s = start_pos.split(",")
+		s =map(int,s)
+		e = end_pos.split(",")
+		e =map(int,e)
+		self.turn_range((s[0],s[1]),(e[0],e[1]),1)
 
-def make_p6(grid):
-	outf = open("p6.ppm","w")
-	outf.write("P6\n")
-	outf.write("1000 1000\n")
-	outf.write("1\n")
+	def turn_off(self,start_pos,end_pos):
+		s = start_pos.split(",")
+		s =map(int,s)
+		e = end_pos.split(",")
+		e =map(int,e)
+		self.turn_range((s[0],s[1]),(e[0],e[1]),0)
 
-	for i in range(GRID_SIZE):
-		for j in range(GRID_SIZE):
-			outf.write(str(grid[i][j]) + " ")
-		outf.write("\n")
+	def toggle(self,start_pos,end_pos):
+		s = start_pos.split(",")
+		s =map(int,s)
+		e = end_pos.split(",")
+		e =map(int,e)
+		self.toggle_range((s[0],s[1]),(e[0],e[1]))
 
-	outf.close()
+	def make_p6(self):
+		outf = open("p6.ppm","w")
+		outf.write("P3\n")
+		outf.write("1000 1000\n")
+		outf.write("1\n")
+
+		for i in range(GRID_SIZE):
+			for j in range(GRID_SIZE):
+				outf.write(str(self.grid[i][j]) + " 0 0 ")
+			outf.write("\n")
+
+		outf.close()
 
 def doit():
 	data = open("data6.txt","r").readlines()
 	import string
 	data = map(string.strip,data)
 
+	grid = Grid()
+
 	for line in data:
 		if line.startswith("turn on"):
 			ldata = line.split(" ")
 			start_pos = ldata[2]
 			end_pos = ldata[4]
-			turn_on(start_pos,end_pos)
+			grid.turn_on(start_pos,end_pos)
 		elif line.startswith("turn off"):
 			ldata = line.split(" ")
 			start_pos = ldata[2]
 			end_pos = ldata[4]
-			turn_off(start_pos,end_pos)
+			grid.turn_off(start_pos,end_pos)
 		elif line.startswith("toggle"):
 			ldata = line.split(" ")
 			start_pos = ldata[1]
 			end_pos = ldata[3]
+			grid.toggle(start_pos,end_pos)
 		else:
 			print "ERR IN INPUT",line
 
-	make_p6(grid)
+	grid.make_p6()
 
-	print count_lights(grid)
+	print grid.count_lights()
 
 doit()
 

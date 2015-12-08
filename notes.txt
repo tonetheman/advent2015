@@ -3,3 +3,8 @@ whoop!
 
 prob 6 notes
 441303 not right
+got it 377891
+
+prob 6 part 2
+not right - 29596 (too low)
+not right - 30521 (too low)
