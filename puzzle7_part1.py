@@ -20,7 +20,7 @@ for line in data:
 
 	m = P.match(line)
 	if m is not None:
-		pass
+		print "AND|OR|OP", line
 	else:
 		m1 = NOT.match(line)
 		if m1 is not None:
