@@ -1,47 +1,123 @@
 
-data = open("data7.txt","r").readlines()
+import re
 
-import string,re
-data = map(string.strip,data)
+PA = re.compile("(\d+) -> ([a-z]+)")
+NOTRULE = re.compile("NOT ([a-z]+) -> ([a-z]+)")
+ANDOR = re.compile("([a-z]+) (AND|OR) ([a-z]+) -> ([a-z]+)")
+SHIFT = re.compile("([a-z]+) (LSHIFT|RSHIFT) (\d+) -> ([a-z]+)")
 
-syms = {}
+data = [
+"123 -> x",
+"456 -> y",
+"x AND y -> d",
+"x OR y -> e",
+"x LSHIFT 2 -> f",
+"y RSHIFT 2 -> g",
+"NOT x -> h",
+"NOT y -> i"
+]
 
-total_instructions = 0
-total_assigns = 0
-total_and1 = 0
-total_or1 = 0
+def doit():
+	data = open("data7.txt","r").readlines()
 
-P = re.compile("([a-z0-9]+) (AND|OR|LSHIFT|RSHIFT) ([a-z0-9]+) -> ([a-z0-9]+)")
-PASSIGN = re.compile("(\d+) -> ([a-z]+)")
-NOT = re.compile("NOT ([a-z]+) -> ([a-z]+)")
-SIMPLE_ASSIGN = re.compile("([a-z]+) -> ([a-z]+)")
+TYPE_ASSIGN  = 0
+TYPE_NOT = 1
+TYPE_ANDOR = 2
+TYPE_SHIFT = 3
+
+class Op: pass
+
+class OpAssign(Op):
+    def __init__(self,value):
+        self.value = value
+        self.TYPE = TYPE_ASSIGN
+    def __repr__(self):
+        return str(self.value)
+        
+class OpNot(Op):
+    def __init__(self,expr):
+        self.expr = expr
+        self.TYPE = TYPE_NOT
+    def __repr__(self):
+        return "OpNot: " + str(self.expr)
+
+class OpAndOr(Op):
+    def __init__(self,optype,expr1,expr2):
+    	self.TYPE = TYPE_ANDOR
+        self.optype = optype
+        self.expr1 = expr1
+        self.expr2 = expr2
+
+class OpShift(Op):
+    def __init__(self, optype, expr1, expr2):
+    	self.TYPE = TYPE_SHIFT
+        self.optype = optype
+        self.expr1 = expr1
+        self.expr2 = expr2
+        
+def try_assign(symtable,line):
+    m = PA.match(line)
+    if m is not None:
+        print "Assign", m.group(1), m.group(2)
+        symtable[m.group(2)] = OpAssign(int(m.group(1)))
+        return True
+    return False
+    
+def try_not(symtable,line):
+    m = NOTRULE.match(line)
+    if m is not None:
+        print "OpNot"
+        symtable[m.group(2)] = OpNot(m.group(1))
+        return True
+    return False
+
+def try_andor(symtable,line):
+    m = ANDOR.match(line)
+    if m is not None:
+        print "OpAndOr"
+        symtable[m.group(4)] = OpAndOr(m.group(2),m.group(1),m.group(3))
+        return True
+    return False
+
+def try_shift(symtable,line):
+    m = SHIFT.match(line)
+    if m is not None:
+        print "OpShift"
+        symtable[m.group(4)] = OpShift(m.group(2),m.group(1),m.group(3))
+        return True
+    return False
+    
+def parse(symtable, line):
+    if try_assign(symtable,line):
+        pass
+    elif try_not(symtable,line):
+        pass
+    elif try_andor(symtable,line):
+        pass
+    elif try_shift(symtable,line):
+        pass
+    else:
+        print "not matched"
+            
+def eval(symname, symtable):
+    print "need to evail for", symname, "in", symtable
+    rule = symtable[symname]
+    if rule.TYPE == TYPE_ASSIGN:
+    	pass
+    elif rule.TYPE == TYPE_NOT:
+    	pass
+
+    print "rule is ", rule
+    
+    
+
+symtable = {}
 for line in data:
-	total_instructions = total_instructions + 1
-
-	m = P.match(line)
-	if m is not None:
-		print "AND|OR|OP", line
-	else:
-		m1 = NOT.match(line)
-		if m1 is not None:
-			pass
-		else:
-			m2 = PASSIGN.match(line)
-			if m2 is not None:
-				val = m2.group(1)
-				sym = m2.group(2)
-				print "PASSIGN",val,sym
-				syms[sym] = int(val)
-			else:
-				m3 = SIMPLE_ASSIGN.match(line)
-				if m3 is not None:
-					pass
-				else:
-					print "not matched",line
+    parse(symtable,line)
+# print symtable
+eval("h", symtable)
 
 
-print "syms", syms
-print "total instructions",total_instructions
 
 
 
