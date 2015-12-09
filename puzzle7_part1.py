@@ -100,15 +100,17 @@ def parse(symtable, line):
         print "not matched"
             
 def eval(symname, symtable):
-    print "need to evail for", symname, "in", symtable
-    rule = symtable[symname]
-    if rule.TYPE == TYPE_ASSIGN:
-    	pass
-    elif rule.TYPE == TYPE_NOT:
-    	pass
+	print "need to evail for", symname, "in", symtable
+	rule = symtable[symname]
+	if rule.TYPE == TYPE_ASSIGN:
+		pass
+	elif rule.TYPE == TYPE_NOT:
+		pass
 
-    print "rule is ", rule
-    
+	print "rule is ", rule
+	print "looking up next rule"
+	rule2 = symtable[rule.expr]
+	print "next rule",rule2   
     
 
 symtable = {}
