@@ -2,9 +2,24 @@
 whoop!
 
 prob 6 notes
+------------
 441303 not right
 got it 377891
 
 prob 6 part 2
 not right - 29596 (too low)
 not right - 30521 (too low)
+
+prob 7 notes
+------------
+- not sure how to solve... looks like some type of recursion thing
+- rewriter idea could work. maybe not in python though
+	- need to try a rewriter that writes c++
+
+- parse tree	 
+a
+(lx)
+((lw OR lv))
+((lc LSHIFT 1)) OR lv
+((lb OR la) LSHIFT 1) OR lv
+(((kh LSHIFT 1) OR la) LSHIFT 1) OR lv
