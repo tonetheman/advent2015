@@ -15,6 +15,7 @@ prob 7 notes
 - not sure how to solve... looks like some type of recursion thing
 - rewriter idea could work. maybe not in python though
 	- need to try a rewriter that writes c++
+	- did it but order seems to matter here for python rewriter :()
 
 - parse tree	 
 a
